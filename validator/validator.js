@@ -122,13 +122,12 @@ class Validator {
 	}
 
 	/**
-	 * @virtual
+	 * @abstract
 	 * 
 	 * Método principal de validação.
 	 * 
 	 * @returns {boolean}
 	 */
 	isValid() {
-		return false;
 	}
 }
