@@ -5,28 +5,27 @@ Utilitário de validação de campos simples.
 ## Uso
 
 As validações podem ser criadas extendendo a classe `Validator` e sobrescrevendo 
-o método abstrato `isValid()`:
+os eventos `onValidate()` e `onFail()`.
+
+A classe inclui algumas verificações simples, que podem ser utilizadas para construir
+validações mais complexas.
 
 ```javascript
-class CodeField extends Validator {
-	constructor(value) {
-		super(value, `Esperado uma combinação de 4 caracteres.`);
+class EmailField extends Validator {
+	onValidate() {
+		return this.isEmail();
 	}
 
-	isValid() {
-		if(this.isString()) {
-			return this.value.trim().length === 4;
-		}
-		
-		return false;
+	onFail() {
+		return `O endereço de e-mail "${this.value}" está incorreto.`;
 	}
 }
 
-const rightCode = new CodeField("1234");
-console.log(rightCode.isValid()? "Correto.": rightCode.expected);
+const right = new EmailField("john.doe@example.com").validate();
+const wrong = new EmailField("@@-.com").validate();
 
-const wrongCode = new CodeField("1");
-console.log(wrongCode.isValid()? "Correto.": wrongCode.expected);
+console.log(right); // null
+console.log(wrong); // O endereço de e-mail "@@-.com" está incorreto.
 ```
 
 ## Licença
