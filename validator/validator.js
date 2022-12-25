@@ -87,7 +87,9 @@ class Validator {
 	 */
 	isDate() {
 		const isInstanceOfDate = this.value instanceof Date;
-		return isInstanceOfDate;
+		const isNotNaN = !isNaN(this.value);
+
+		return isInstanceOfDate && isNotNaN;
 	}
 
 	/**
