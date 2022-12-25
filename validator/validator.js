@@ -71,6 +71,18 @@ class Validator {
 	}
 
 	/**
+	 * Validação de booleanos.
+	 * 
+	 * @returns {boolean}
+	 */
+	isBoolean() {
+		const isTypeOfBoolean = typeof this.value === "boolean";
+		const isInstanceOfBoolean = this.value instanceof Boolean;
+
+		return isTypeOfBoolean || isInstanceOfBoolean;
+	}
+
+	/**
 	 * Validação de números inteiros.
 	 * 
 	 * @returns {boolean}
