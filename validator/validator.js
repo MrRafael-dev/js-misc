@@ -1,6 +1,6 @@
 /**
  * @name validator
- * @version 1.0.1
+ * @version 1.0.2
  * @description Utilitário de validação de campos simples.
  * @author Mr.Rafael
  * @license MIT
@@ -93,6 +93,71 @@ class Validator {
 	}
 
 	/**
+	 * Validação de números inteiros, em `string`.
+	 * 
+	 * Esta validação não permite expoentes (ex: `10e+1` é inválido).
+	 * 
+	 * @returns {boolean}
+	 */
+	isIntegerString() {
+		if(this.isString()) {
+			const value = new String(this.value).valueOf().toLowerCase();
+
+			// Números válidos.
+			const numbers = "0123456789";
+			const charset = `${numbers}`;
+
+			// Validação de valor. Valores exponenciais não são suportados...
+			for(let index = 0; index < value.length; index += 1) {
+				const char = value.charAt(index);
+				const indexOfChar = numbers.indexOf(char);
+
+				if(indexOfChar < 0) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Validação de charset.
+	 * 
+	 * @param {string} charset Charset de referência.
+	 * @param {boolean} isCaseSensitive Reforçar caracteres em letras maiúsculas e minúsculas (padrão: `true`).
+	 * 
+	 * @returns {boolean}
+	 */
+	isUnderCharset(charset, isCaseSensitive = true) {
+		if(this.isString()) {
+			let value = new String(this.value).valueOf();
+			
+			// Ignorar letras maísculas e minúsculas...
+			if(isCaseSensitive) {
+				charset = charset.toLowerCase();
+				value = value.toLowerCase();
+			}
+
+			// Validar charset...
+			for(let index = 0; index < value.length; index += 1) {
+				const char = value.charAt(index);
+				const indexOfChar = charset.indexOf(char);
+
+				if(indexOfChar < 0) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Validação de datas.
 	 * 
 	 * @returns {boolean}
@@ -125,14 +190,35 @@ class Validator {
 	}
 
 	/**
+	 * Validaçao de arrays.
+	 * 
+	 * @returns {boolean}
+	 */
+	isArray() {
+		const isArray = Array.isArray(this.value);
+		return isArray;
+	}
+
+	/**
+	 * Validação de objetos.
+	 * 
+	 * @returns {boolean}
+	 */
+	isObject() {
+		const isArray = Array.isArray(this.value);
+		const isInstanceOfObject = this.value instanceof Object;
+
+		return !isArray && isInstanceOfObject;
+	}
+
+	/**
 	 * Validação de endereços de e-mail.
 	 * 
 	 * @returns {boolean}
 	 */
 	isEmail() {
 		if(this.isString()) {
-			/** @type {string} */
-			const value = this.value;
+			const value = new String(this.value).valueOf().toLowerCase();
 			
 			// Validação de valor.
 			const atIndex      = value.indexOf("@");
@@ -154,7 +240,7 @@ class Validator {
 			// Percorrer caracterepara verificar se os caracteres
 			// fazem parte do charset correto...
 			for(let index = 0; index < value.length; index += 1) {
-				const char = value.charAt(index).toLowerCase();
+				const char = value.charAt(index);
 				const charIndex = charset.indexOf(char);
 
 				// Um endereço de e-mail exige um charset específico.
